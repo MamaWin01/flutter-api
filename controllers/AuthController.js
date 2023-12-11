@@ -1,6 +1,6 @@
 import User from '../models/account.js'
 import jwt from 'jsonwebtoken'
-import expressjwt from 'express-jwt'
+import { expressjwt } from 'express-jwt'
 
 // setup process.env
 import dotenv from 'dotenv'
