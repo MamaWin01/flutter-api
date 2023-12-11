@@ -1,6 +1,6 @@
 import User from '../models/account.js'
 import jwt from 'jsonwebtoken'
-import { expressjwt } from 'express-jwt'
+import expressjwt from 'express-jwt'
 
 // setup process.env
 import dotenv from 'dotenv'
@@ -20,7 +20,7 @@ const signin = async (req, res, next) => {
 
   const token = jwt.sign({
     _id: user._id
-  }, {secret: jwtsecret}, {
+  }, jwtsecret, {
     algorithm: "HS256"
   })
 

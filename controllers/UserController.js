@@ -1,6 +1,6 @@
 import AccountModel from '../models/account.js'
 import jwt from 'jsonwebtoken'
-import { expressjwt } from 'express-jwt'
+import expressjwt from 'express-jwt'
 import extend from 'lodash/extend.js'
 
 // setup process.env
@@ -22,7 +22,7 @@ const login = async (req, res, next) => {
 
   const token = jwt.sign({
     _id: user._id
-  }, {secret: jwtsecret}, {
+  }, jwtsecret, {
     algorithm: "HS256"
   })
 
