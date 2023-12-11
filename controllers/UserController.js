@@ -117,12 +117,6 @@ const update = async (req, res) => {
     }
   }
 
-const checkSignin = expressjwt({
-    secret: jwtsecret,
-    algorithms: ["HS256"],
-    userProperty: 'auth'
-  })
-
 const getStatus = async(req, res) => {
   console.log('test');
   return res.json({'status':200, 'message':'OK!'});
