@@ -20,7 +20,7 @@ const signin = async (req, res, next) => {
 
   const token = jwt.sign({
     _id: user._id
-  }, jwtsecret, {
+  }, {secret: jwtsecret}, {
     algorithm: "HS256"
   })
 
