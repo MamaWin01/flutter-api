@@ -12,7 +12,7 @@ const jwtsecret = `${process.env.jwtsecret}`
 
 const login = async (req, res, next) => {
   console.log(req.body)
-  let user = await AccountModel.findOne({'name': req.body.name})
+  let user = await AccountModel.findOne({'email': req.body.email})
 
   if(!user || !user.authenticate(req.body.password)){
     return res.status(401).json({
@@ -30,7 +30,7 @@ const login = async (req, res, next) => {
     expire: new Date() + 9999
   })
 
-  return res.json({
+  return res.status(200).json({
     token,
     user: {
       _id: user._id,
@@ -81,10 +81,10 @@ const register = async (req, res, next) => {
         })
       }
     }
-    const validName = await AccountModel.findOne({name:req.body.name})
-    if(validName) {
+    const validEmail = await AccountModel.findOne({email:req.body.email})
+    if(validEmail) {
       return res.status(201).json({
-        error: "Nama sudah terpakai"
+        error: "Email sudah terpakai"
       })
     }
     try {
@@ -108,7 +108,7 @@ const logout = async (req, res, next) => {
 
 const update = async (req, res) => {
     try {
-      var user = await AccountModel.findOne({name: req.body.name})
+      var user = await AccountModel.findOne({email: req.body.email})
       if(req.body.new_password.length < 6) {
         return res.status(500).json({
           error: "Password harus melebihi 6 huruf"
