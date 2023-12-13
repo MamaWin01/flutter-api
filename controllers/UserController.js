@@ -49,6 +49,21 @@ const register = async (req, res, next) => {
           error: "Password harus melebihi 6 huruf"
         })
       }
+      if(!req.body.name) {
+        return res.status(201).json({
+          error: "Nama harus terisi"
+        })
+      }
+      if(!req.body.email) {
+        return res.status(201).json({
+          error: "Email harus terisi"
+        })
+      }
+      if(!req.body.password) {
+        return res.status(201).json({
+          error: "Password harus terisi"
+        })
+      }
     } else {
       if(!req.body.name) {
         return res.status(201).json({
