@@ -42,6 +42,7 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
     const user = new AccountModel(req.body)
+  console.log(req.body);
     if(req.body.password) {
       if(req.body.password.length < 6) {
         return res.status(201).json({
