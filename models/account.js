@@ -52,4 +52,4 @@ const AccountSchema = new mongoose.Schema({
     }
   }
 
-export default mongoose.model('Users', AccountSchema, 'Users');
+export default mongoose.model('expense_tracker', AccountSchema, 'Users');
