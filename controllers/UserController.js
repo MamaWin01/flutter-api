@@ -8,7 +8,7 @@ import dotenv from 'dotenv'
 import account from '../models/account.js'
 dotenv.config();
 
-const jwtsecret = process.env.jwtsecret
+const jwtsecret = `${process.env.jwtsecret}`
 
 const login = async (req, res, next) => {
   console.log(req.body)
