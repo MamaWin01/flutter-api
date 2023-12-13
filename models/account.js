@@ -52,4 +52,4 @@ const AccountSchema = new mongoose.Schema({
     }
   }
 
-export default mongoose.model('Accounts', AccountSchema, 'Accounts');
+export default mongoose.model('Users', AccountSchema, 'Users');

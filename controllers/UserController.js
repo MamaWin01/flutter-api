@@ -44,30 +44,30 @@ const register = async (req, res, next) => {
     const user = new AccountModel(req.body)
     if(req.body.password) {
       if(req.body.password.length < 6) {
-        return res.status(200).json({
+        return res.status(201).json({
           error: "Password harus melebihi 6 huruf"
         })
       }
     } else {
       if(!req.body.name) {
-        return res.status(200).json({
+        return res.status(201).json({
           error: "Nama harus terisi"
         })
       }
       if(!req.body.email) {
-        return res.status(200).json({
+        return res.status(201).json({
           error: "Email harus terisi"
         })
       }
       if(!req.body.password) {
-        return res.status(200).json({
+        return res.status(201).json({
           error: "Password harus terisi"
         })
       }
     }
     const validName = await AccountModel.findOne({name:req.body.name})
     if(validName) {
-      return res.status(200).json({
+      return res.status(201).json({
         error: "Nama sudah terpakai"
       })
     }
