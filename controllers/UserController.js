@@ -30,7 +30,7 @@ const login = async (req, res, next) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-    }, jwtsecret)
+    }, jwtsecret, {expiresIn:'1h'})
 
   res.cookie("t", token, {
     expire: new Date() + 9999
