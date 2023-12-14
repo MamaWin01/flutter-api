@@ -16,15 +16,21 @@ const login = async (req, res, next) => {
 
   if(!user || !user.authenticate(req.body.password)){
     return res.status(401).json({
-      error: 'Name or password anda tidak sesuai'
+      error: 'Email or password anda tidak sesuai'
     })
   }
 
+  // const token = jwt.sign({
+  //   _id: user._id
+  // }, jwtsecret, {
+  //   algorithm: "HS256"
+  // })
+
   const token = jwt.sign({
-    _id: user._id
-  }, jwtsecret, {
-    algorithm: "HS256"
-  })
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    }, jwtsecret, {expiresIn:'1h'})
 
   res.cookie("t", token, {
     expire: new Date() + 9999
