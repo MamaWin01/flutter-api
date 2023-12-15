@@ -4,11 +4,16 @@ import ExpenseTrackerController from '../controllers/ExpenseTrackerController.js
 const router = express.Router()
 
 router.route('/api/MainPage')
-      .get(ExpenseTrackerController.getMainPage)
-      .post(ExpenseTrackerController.addTransaction)
+    .post(ExpenseTrackerController.getMainPage)
+
+router.route('/api/addTransaction')
+    .post(ExpenseTrackerController.addTransaction)
+
+      
+router.route('/api/getBankOrEWallet')
+    .post(ExpenseTrackerController.getBankAndEWallet)
 
 router.route('/api/addBankOrEWallet')
-      .get(ExpenseTrackerController.getBankAndEWallet)
-      .post(ExpenseTrackerController.getBankAndEWallet)   
+    .post(ExpenseTrackerController.getBankAndEWallet)   
 
 export default router;
