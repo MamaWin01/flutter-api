@@ -4,10 +4,12 @@ const transactionSchema = new mongoose.Schema({
   id: String,
   name: String,
   email: String,
+  date_created: Date,
   type: Number,
   status: Number,
   amount: Number,
   category: String,
+  desc: String,
   user_id: {
     type: mongoose.Schema.ObjectId,
     ref: 'Users'

@@ -10,7 +10,7 @@ const getMainPage = async(req, res) => {
   try {
     const userBal = await UserBalance.findOne({email:req.body.email})
     const ewallet = await EWallet.findOne({email:req.body.email});
-    const transaction = await Transaction.find({email:req.body.email}).limit(5);
+    const transaction = await Transaction.find({email:req.body.email}).sort({date_created: 1}).limit(5);
     const data = {
       'userBal':userBal ? userBal.balance : 0,
       'ewallet':ewallet ? ewallet.balance : 0,
