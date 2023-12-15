@@ -7,6 +7,7 @@ import ServerlessHttp from 'serverless-http'
 // Routes
 import userRoutes from '../routes/userRoutes.js'
 import karyawanRoutes from '../routes/karyawanRoutes.js'
+import expenseTrackerRoutes from '../routes/expensetrackerRoutes.js'
 import jabatanRoutes from '../routes/jabatanRoutes.js'
 import kehadiranRoutes from '../routes/kehadiranRoutes.js'
 import gajiRoutes from '../routes/gajiRoutes.js'
@@ -35,6 +36,7 @@ app.use(bodyParser.json());
 app.use(cors())
 
 app.use('/', userRoutes);
+app.use('/', expenseTrackerRoutes);
 app.use('/', karyawanRoutes);
 app.use('/', jabatanRoutes);
 app.use('/', kehadiranRoutes);

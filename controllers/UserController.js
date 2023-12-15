@@ -1,7 +1,9 @@
 import AccountModel from '../models/account.js'
+import UserBalance from '../models/user_balance.js'
 import jwt from 'jsonwebtoken'
 import { expressjwt } from 'express-jwt'
 import extend from 'lodash/extend.js'
+import generator from '../helpers/generator.js'
 
 // setup process.env
 import dotenv from 'dotenv'
@@ -95,6 +97,18 @@ const register = async (req, res, next) => {
     }
     try {
         await user.save()
+        const user_id = await AccountModel.findOne({email:req.body.email});
+        const DataUserBal = {
+          'id':generator.generateId(6),
+          'name': req.body.name,
+          'email':req.body.email,
+          'user_id':user_id,
+          'balance': 0
+        }
+      
+        const UserBal = new UserBalance(DataUserBal)
+        await UserBal.save()
+        
         return res.status(200).json({
           message: 'Successfully signed up'
         })

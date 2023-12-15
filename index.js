@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 
 // Routes
 import userRoutes from './routes/userRoutes.js'
+import expenseTrackerRoutes from './routes/expensetrackerRoutes.js'
 import karyawanRoutes from './routes/karyawanRoutes.js'
 import jabatanRoutes from './routes/jabatanRoutes.js'
 import kehadiranRoutes from './routes/kehadiranRoutes.js'
@@ -34,6 +35,7 @@ app.use(bodyParser.json());
 app.use(cors())
 
 app.use('/', userRoutes);
+app.use('/', expenseTrackerRoutes);
 app.use('/', karyawanRoutes);
 app.use('/', jabatanRoutes);
 app.use('/', kehadiranRoutes);
