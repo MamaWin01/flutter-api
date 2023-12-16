@@ -48,7 +48,7 @@ const addTransaction = async(req, res) => {
       await userData.save()
     } else {
       const newBal = {
-        'balance':userData.balance + req.body.amount,
+        'balance':Number(userData.balance) + Number(req.body.amount),
       }
       userData = extend(userData, newBal)
       userData.updated = Date.now()

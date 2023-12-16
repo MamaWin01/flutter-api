@@ -8,7 +8,6 @@ const transactionSchema = new mongoose.Schema({
   type: Number,
   status: Number,
   amount: Number,
-  category: String,
   desc: String,
   user_id: {
     type: mongoose.Schema.ObjectId,
