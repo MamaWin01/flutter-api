@@ -9,7 +9,6 @@ router.route('/api/MainPage')
 router.route('/api/addTransaction')
     .post(ExpenseTrackerController.addTransaction)
 
-      
 router.route('/api/getBankOrEWallet')
     .post(ExpenseTrackerController.getBankAndEWallet)
 

@@ -4,7 +4,7 @@ const transactionSchema = new mongoose.Schema({
   id: String,
   name: String,
   email: String,
-  date_created: Date,
+  date_created: String,
   type: Number,
   status: Number,
   amount: Number,
