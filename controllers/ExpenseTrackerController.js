@@ -4,21 +4,27 @@ import EWallet from '../models/ewallet.js'
 import Transaction from '../models/transaction.js'
 import generator from '../helpers/generator.js'
 import extend from 'lodash/extend.js'
+import UserModel from '../models/account.js'
+import transaction from '../models/transaction.js'
 
 const getMainPage = async(req, res) => {
-  console.log(req.body)
   try {
     const userBal = await UserBalance.findOne({email:req.body.email})
-    const ewallet = await EWallet.findOne({email:req.body.email});
+    const ewallet = await EWallet.find({email:req.body.email});
     const transaction = await Transaction.find({email:req.body.email}).sort({$natural: -1}).limit(5);
+    var ewallBal = 0;
+    for(var i of ewallet) {
+      ewallBal += i.balance
+    }
     const data = {
       'userBal':userBal ? userBal.balance : 0,
-      'ewallet':ewallet ? ewallet.balance : 0,
+      'ewallet':ewallet ? ewallBal : 0,
       'transaction':transaction ? transaction : null
     }
     console.log(data)
     return res.status(200).json(data)
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       error: err.messages
     })
@@ -26,8 +32,20 @@ const getMainPage = async(req, res) => {
 }
 
 const getBankAndEWallet = async(req, res) => {
-
-  return res.status(200).json({'status':'yeyy'})
+  try {
+    if(req.body.type == 0) {
+      var TypeInfo = await UserBank.find({email:req.body.email})
+    } else {
+      var TypeInfo = await EWallet.find({email:req.body.email})
+    }
+    return res.status(200).json({
+      'data':TypeInfo
+    })
+  } catch(err) {
+    return res.status(500).json({
+      error: err.messages
+    })
+  }
 }
 
 const addTransaction = async(req, res) => {
@@ -64,17 +82,168 @@ const addTransaction = async(req, res) => {
       error: err.messages
     })
   }
-  return res.status(200).json({'status':'yes'})
 }
 
 const addBankAndEWallet = async(req, res) => {
+  if(req.body.type == 0) {
+    var infoName = 'bank';
+  } else {
+    var infoName = 'E-wallet'
+  }
+  if(!req.body.name) {
+    return res.status(201).json({
+      error: 'Nama ' + infoName + ' harus terisi'
+    })
+  }
+  if(!req.body.amount) {
+    return res.status(201).json({
+      error: 'Jumlah '+ infoName +' harus terisi'
+    })
+  }
+  if(infoName == 'bank') {
+    var validName = await UserBank.findOne({bank_name:req.body.name})
+  } else {
+    var validName = await EWallet.findOne({wallet_name:req.body.name})
+  }
+  if(validName) {
+    return res.status(201).json({
+      error: 'Nama '+ infoName +' sudah terdaftar'
+    })
+  }
+  try {
+    var Account = await UserModel.findOne({email:req.body.email})
+    if(infoName == 'E-wallet') {
+      const data = {
+        'id': generator.generateId(6),
+        'email': req.body.email,
+        'user_id': Account._id,
+        'wallet_name':req.body.name,
+        'balance':req.body.amount
+      }
+      const ewallet = new EWallet(data)
+      await ewallet.save()
+    } else {
+      const data = {
+        'id': generator.generateId(6),
+        'email': req.body.email,
+        'user_id': userBal._id,
+        'bank_name':req.body.name,
+        'balance':req.body.amount
+      }
+      const bank = new UserBank(data)
+      await bank.save()
+    }
+    return res.status(200).json({
+      message: 'Successfully add '+ infoName
+    })
+  } catch(err) {
+    return res.status(500).json({
+      error: err.messages
+    })
+  }
+}
 
-  return res.status(200).json({'status':'yeyy'})
+const editBankAndEWallet = async(req, res) => {
+  if(req.body.type == 0) {
+    var infoName = 'bank';
+  } else {
+    var infoName = 'E-wallet'
+  }
+  if(!req.body.name) {
+    return res.status(201).json({
+      error: 'Nama ' + infoName + ' harus terisi'
+    })
+  }
+  if(!req.body.amount) {
+    return res.status(201).json({
+      error: 'Jumlah '+ infoName +' harus terisi'
+    })
+  }if(infoName == 'bank') {
+    var validName = await UserBank.findOne({bank_name:req.body.name})
+  } else {
+    var validName = await EWallet.findOne({wallet_name:req.body.name})
+  }
+  if(validName) {
+    return res.status(201).json({
+      error: 'Nama '+ infoName +' sudah terdaftar'
+    })
+  }
+  try {
+    if(infoName == 'E-wallet') {
+      const data = {
+        'wallet_name':req.body.name,
+        'balance':req.body.amount
+      }
+      var ewallet = await EWallet.findOne({_id:req.body.id})
+      ewallet = extend(ewallet, data)
+      await ewallet.save()
+    } else {
+      const data = {
+        'bank_name':req.body.name,
+        'balance':req.body.amount
+      }
+      var bank = await UserBank.findOne({_id:req.body.id})
+      bank = extend(bank, data)
+      await bank.save()
+    }
+    return res.status(200).json({
+      message: 'Successfully update '+ infoName
+    })
+  } catch(err) {
+    return res.status(500).json({
+      error: err.messages
+    })
+  }
+}
+
+const deleteBankAndEWallet = async(req, res) => {
+  if(req.body.type == 0) {
+    var infoName = 'bank';
+  } else {
+    var infoName = 'E-wallet'
+  }
+  try {
+    if(infoName == 'E-wallet') {
+      var ewallet = await EWallet.deleteOne({_id:req.body.id})
+    } else {
+      var bank = await UserBank.deleteOne({_id:req.body.id})
+    }
+    return res.status(200).json({
+      message: 'Successfully delete '+ infoName
+    })
+  } catch(err) {
+    return res.status(500).json({
+      error: err.messages
+    })
+  }
+}
+
+const editAccount = async(req, res) => {
+  
+}
+
+const deleteAccount = async(req, res) => {
+  
+}
+
+
+const getTransaction = async(req, res) => {
+  if(req.body.date_created == '' || req.body.date_created == null) {
+    var transaction = await Transaction.find({email:req.body.email}).sort({$natural: -1}).limit(100);
+  } else {
+    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created}).sort({$natural: -1});
+  }
+  return res.status(200).json({'transaction':transaction})
 }
 
 export default {
   getMainPage,
   addTransaction,
+  getTransaction,
   getBankAndEWallet,
   addBankAndEWallet,
+  editBankAndEWallet,
+  deleteBankAndEWallet,
+  editAccount,
+  deleteAccount,
 }

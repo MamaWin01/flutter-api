@@ -9,10 +9,19 @@ router.route('/api/MainPage')
 router.route('/api/addTransaction')
     .post(ExpenseTrackerController.addTransaction)
 
+router.route('/api/getTransaction')
+    .post(ExpenseTrackerController.getTransaction)
+
 router.route('/api/getBankOrEWallet')
     .post(ExpenseTrackerController.getBankAndEWallet)
 
 router.route('/api/addBankOrEWallet')
-    .post(ExpenseTrackerController.getBankAndEWallet)   
+    .post(ExpenseTrackerController.addBankAndEWallet)   
 
+router.route('/api/editBankOrEWallet')
+    .post(ExpenseTrackerController.editBankAndEWallet)  
+    
+router.route('/api/deleteBankOrEWallet')
+    .post(ExpenseTrackerController.deleteBankAndEWallet)  
+    
 export default router;
