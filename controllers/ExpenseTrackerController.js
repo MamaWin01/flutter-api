@@ -230,7 +230,7 @@ const deleteAccount = async(req, res) => {
 const getTransaction = async(req, res) => {
   var query = [];
 
-  if(req.body.date_created == '' && req.body.status == 'all' && req.body.type == 'all') {
+  if(req.body.date_created == '' && req.body.status == '101' && req.body.type == '101') {
     console.log('aaa');
     var transaction = await Transaction.find({email:req.body.email}).sort({$natural: -1}).limit(100);
     return res.status(200).json({'transaction':transaction})
@@ -241,11 +241,11 @@ const getTransaction = async(req, res) => {
     query['date_created'] = req.body.date_created;
   } 
 
-  if(req.body.status != '' && req.body.status != null || req.body.status == '0') {
+  if((req.body.status != '' && req.body.status != null && req.body.status != '101') || req.body.status == '0') {
     query['status'] = req.body.status;
   } 
 
-  if(req.body.type != '' && req.body.type != null || req.body.type == '0') {
+  if((req.body.type != '' && req.body.type != null && req.body.type != '101') || req.body.type == '0') {
     query['type'] = req.body.type;
   }
 
