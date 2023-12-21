@@ -230,6 +230,12 @@ const deleteAccount = async(req, res) => {
 const getTransaction = async(req, res) => {
   if(req.body.date_created == '' || req.body.date_created == null) {
     var transaction = await Transaction.find({email:req.body.email}).sort({$natural: -1}).limit(100);
+  } else if((req.body.type != 'all' || req.body.type != null) && (req.body.status != 'all' || req.body.status != null)) {
+    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created,status:req.body.status,type:req.body.type}).sort({$natural: -1});
+  } else if(req.body.type != 'all' || req.body.date_created != null) {
+    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created,type:req.body.type}).sort({$natural: -1});
+  } else if(req.body.status != 'all' || req.body.status != null) {
+    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created,status:req.body.status}).sort({$natural: -1});
   } else {
     var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created}).sort({$natural: -1});
   }
