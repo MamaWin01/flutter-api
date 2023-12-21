@@ -228,17 +228,31 @@ const deleteAccount = async(req, res) => {
 
 
 const getTransaction = async(req, res) => {
-  if(req.body.date_created == '' || req.body.date_created == null) {
+  var query = [];
+
+  if(req.body.date_created == '' && req.body.status == 'all' && req.body.type == 'all') {
+    console.log('aaa');
     var transaction = await Transaction.find({email:req.body.email}).sort({$natural: -1}).limit(100);
-  } else if((req.body.type != 'all' || req.body.type != null) && (req.body.status != 'all' || req.body.status != null)) {
-    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created,status:req.body.status,type:req.body.type}).sort({$natural: -1});
-  } else if(req.body.type != 'all' || req.body.date_created != null) {
-    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created,type:req.body.type}).sort({$natural: -1});
-  } else if(req.body.status != 'all' || req.body.status != null) {
-    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created,status:req.body.status}).sort({$natural: -1});
-  } else {
-    var transaction = await Transaction.find({email:req.body.email,date_created:req.body.date_created}).sort({$natural: -1});
+    return res.status(200).json({'transaction':transaction})
   }
+
+  query['email'] = req.body.email;
+  if(req.body.date_created != '' && req.body.date_created != null) {
+    query['date_created'] = req.body.date_created;
+  } 
+
+  if(req.body.status != '' && req.body.status != null || req.body.status == '0') {
+    query['status'] = req.body.status;
+  } 
+
+  if(req.body.type != '' && req.body.type != null || req.body.type == '0') {
+    query['type'] = req.body.type;
+  }
+
+  const obj = {...query};
+  console.log(obj);
+  var transaction = await Transaction.find(obj).sort({$natural: -1});
+  
   return res.status(200).json({'transaction':transaction})
 }
 
