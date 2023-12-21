@@ -230,7 +230,7 @@ const deleteAccount = async(req, res) => {
 const getTransaction = async(req, res) => {
   var query = [];
 
-  if(req.body.date_created == '' && req.body.status == '101' && req.body.type == '101') {
+  if(req.body.date_created == '' && req.body.status == 'all' && req.body.type == 'all') {
     console.log('aaa');
     var transaction = await Transaction.find({email:req.body.email}).sort({$natural: -1}).limit(100);
     return res.status(200).json({'transaction':transaction})
