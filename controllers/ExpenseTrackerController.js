@@ -101,9 +101,9 @@ const addBankAndEWallet = async(req, res) => {
     })
   }
   if(infoName == 'bank') {
-    var validName = await UserBank.findOne({bank_name:req.body.name})
+    var validName = await UserBank.findOne({bank_name:req.body.name,email:req.body.email})
   } else {
-    var validName = await EWallet.findOne({wallet_name:req.body.name})
+    var validName = await EWallet.findOne({wallet_name:req.body.name,email:req.body.email})
   }
   if(validName) {
     return res.status(201).json({
@@ -123,6 +123,7 @@ const addBankAndEWallet = async(req, res) => {
       var ewallet = new EWallet(data)
       await ewallet.save()
     } else {
+      var userBal = await UserBalance.findOne({email:req.body.email});
       const data = {
         'id': generator.generateId(6),
         'email': req.body.email,
@@ -132,7 +133,6 @@ const addBankAndEWallet = async(req, res) => {
       }
       var bank = new UserBank(data)
       await bank.save()
-      var userBal = await UserBalance.findOne({email:req.body.email});
       const ListBal = {
         'balance': userBal.balance + req.body.amount,
       }
