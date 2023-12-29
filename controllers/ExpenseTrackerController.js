@@ -120,8 +120,21 @@ const addBankAndEWallet = async(req, res) => {
         'wallet_name':req.body.name,
         'balance':req.body.amount
       }
+      const Listtrans = {
+        'id': generator.generateId(6),
+        'date_created': formatDate(Date()),
+        'name': Account.name,
+        'email': Account.email,
+        'user_id': Account._id,
+        'amount': req.body.amount,
+        'desc': 'Add New EWallet ' + req.body.name,
+        'status': 1,
+        'type': 1,
+      }
       var ewallet = new EWallet(data)
       await ewallet.save()
+      var trans = new Transaction(Listtrans)
+      await trans.save()
     } else {
       var userBal = await UserBalance.findOne({email:req.body.email});
       const data = {
@@ -131,11 +144,24 @@ const addBankAndEWallet = async(req, res) => {
         'bank_name':req.body.name,
         'balance':req.body.amount
       }
+      const Listtrans = {
+        'id': generator.generateId(6),
+        'date_created': formatDate(Date()),
+        'name': Account.name,
+        'email': Account.email,
+        'user_id': Account._id,
+        'amount': req.body.amount,
+        'desc': 'Add New Bank ' + req.body.name,
+        'status': 1,
+        'type': 0,
+      }
       var bank = new UserBank(data)
       await bank.save()
       const ListBal = {
         'balance': userBal.balance + req.body.amount,
       }
+      var trans = new Transaction(Listtrans)
+      await trans.save()
       userBal = extend(userBal, ListBal)
       await userBal.save();
     }
@@ -260,6 +286,20 @@ const getTransaction = async(req, res) => {
   var transaction = await Transaction.find(obj).sort({$natural: -1});
   
   return res.status(200).json({'transaction':transaction})
+}
+
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
 }
 
 export default {
