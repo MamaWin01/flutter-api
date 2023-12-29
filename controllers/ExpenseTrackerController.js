@@ -284,7 +284,9 @@ const editAccount = async(req, res) => {
         error: "Paswword atau nama anda salah"
       })
     }
-    req.body.profile_image = Buffer.from(req.body.profile_image, 'base64');
+    if(req.body.profile_image) {
+      req.body.profile_image = Buffer.from(req.body.profile_image, 'base64');
+    }
     req.body.email = req.body.new_email
     req.body.name = req.body.new_name
     req.body.password = req.body.new_password
