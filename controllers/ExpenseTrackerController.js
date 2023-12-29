@@ -271,7 +271,7 @@ const editAccount = async(req, res) => {
         error: "Password harus melebihi 6 huruf"
       })
     }
-    const validEmail = await AccountModel.findOne({email:req.body.new_email})
+    const validEmail = await UserModel.findOne({email:req.body.new_email})
     if(validEmail) {
       return res.status(201).json({
         error: "Email sudah terpakai"
