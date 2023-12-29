@@ -192,24 +192,26 @@ const editBankAndEWallet = async(req, res) => {
     })
   }if(infoName == 'bank') {
     var validName = await UserBank.findOne({bank_name:req.body.name,email:req.body.email})
+    var oriName = await UserBank.findOne({_id:req.body.id})
   } else {
     var validName = await EWallet.findOne({wallet_name:req.body.name,email:req.body.email})
+    var oriName = await EWallet.findOne({_id:req.body.id})
   }
-
-  if(infoName == 'E-wallet') {
-    if(validName && validName.wallet_name != req.body.name) {
-      return res.status(201).json({
-        error: 'Nama '+ infoName +' sudah terdaftar'
-      })
-    }
-  } else {
-    if(validName && validName.bank_name != req.body.name) {
-      return res.status(201).json({
-        error: 'Nama '+ infoName +' sudah terdaftar'
-      })
+  if(validName) {
+    if(infoName == 'E-wallet') {
+      if(oriName.wallet_name != req.body.name) {
+        return res.status(201).json({
+          error: 'Nama '+ infoName +' sudah terdaftar'
+        })
+      }
+    } else {
+      if(oriName.bank_name != req.body.name) {
+        return res.status(201).json({
+          error: 'Nama '+ infoName +' sudah terdaftar'
+        })
+      }
     }
   }
-
   try {
     if(infoName == 'E-wallet') {
       const data = {
