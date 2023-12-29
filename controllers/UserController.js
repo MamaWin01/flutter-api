@@ -49,6 +49,7 @@ const login = async (req, res, next) => {
 }
 
 const register = async (req, res, next) => {
+    req.body.profile_image = null;
     const user = new AccountModel(req.body)
     console.log(req.body);
     if(req.body.password) {

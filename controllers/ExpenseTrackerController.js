@@ -263,11 +263,60 @@ const deleteBankAndEWallet = async(req, res) => {
 }
 
 const editAccount = async(req, res) => {
-  
+  console.log(req.body);
+  try {
+    var user = await UserModel.findOne({email: req.body.email})
+    if(req.body.new_password.length < 6) {
+      return res.status(500).json({
+        error: "Password harus melebihi 6 huruf"
+      })
+    }
+    const validEmail = await AccountModel.findOne({email:req.body.new_email})
+    if(validEmail) {
+      return res.status(201).json({
+        error: "Email sudah terpakai"
+      })
+    }
+    if(!user.authenticate(req.body.password)) {
+      return res.status(500).json({
+        error: "Paswword atau nama anda salah"
+      })
+    }
+    req.profile_image = Buffer.from(req.body.profile_image, 'base64');
+    req.body.email = req.body.new_email
+    req.body.name = req.body.new_name
+    req.body.password = req.body.new_password
+    user = extend(user, req.body)
+    await user.save()
+    user.hashed_password = undefined
+    user.salt = undefined
+    return res.status(200).json({
+      message: 'Successfully update account'
+    })
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      error: err.messages
+    })
+  }
 }
 
 const deleteAccount = async(req, res) => {
-  
+  var user = await UserModel.findOne({_id:req.body.id})
+  console.log(user);
+  if(!user.authenticate(req.body.password)) {
+    return res.status(500).json({
+      error: "Paswword atau nama anda salah"
+    })
+  }
+  await UserBalance.find({user_id:user._id}).deleteMany();
+  await UserBank.find({user_id:user._id}).deleteMany();
+  await EWallet.find({user_id:user._id}).deleteMany();
+  await Transaction.find({user_id:user._id}).deleteMany();
+  user.deleteOne()
+  return res.status(200).json({
+    message: 'Successfully delete account'
+  })
 }
 
 
@@ -300,6 +349,25 @@ const getTransaction = async(req, res) => {
   return res.status(200).json({'transaction':transaction})
 }
 
+const getAccountInfo = async(req, res) => {
+  var userData = await UserModel.findOne({email:req.body.email})
+  const data = {
+    'id': userData._id,
+    'name': userData.name,
+    'email': userData.email,
+    'profile_image': userData.profile_image.toString('base64')
+  }
+  return res.status(200).json(data);
+}
+
+const validationAccountPassword = async(req, res) => {
+  if(!user || !user.authenticate(req.body.password)){
+    return res.status(200).json({'isvalid':0});
+  } else {
+    return res.status(200).json({'isvalid':1});
+  }
+}
+
 function formatDate(date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
@@ -324,4 +392,6 @@ export default {
   deleteBankAndEWallet,
   editAccount,
   deleteAccount,
+  getAccountInfo,
+  validationAccountPassword
 }

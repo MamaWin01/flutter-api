@@ -23,5 +23,17 @@ router.route('/api/editBankOrEWallet')
     
 router.route('/api/deleteBankOrEWallet')
     .post(ExpenseTrackerController.deleteBankAndEWallet)  
+
+router.route('/api/editAccount')
+    .post(ExpenseTrackerController.editAccount)  
     
+router.route('/api/deleteAccount')
+    .post(ExpenseTrackerController.deleteAccount)  
+
+router.route('/api/getAccountInfo')
+    .post(ExpenseTrackerController.getAccountInfo)  
+
+router.route('/api/validationPassword')
+    .post(ExpenseTrackerController.validationAccountPassword) 
+
 export default router;

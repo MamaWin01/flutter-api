@@ -8,6 +8,7 @@ const AccountSchema = new mongoose.Schema({
       type: String,
       // required: "Password is required"
     },
+    profile_image: Buffer,
     salt: String,
   })
   
