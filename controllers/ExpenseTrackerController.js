@@ -85,10 +85,10 @@ const addTransaction = async(req, res) => {
 }
 
 const addBankAndEWallet = async(req, res) => {
-  if(req.body.type == 0) {
-    var infoName = 'bank';
+  if(req.body.type == 1) {
+    var infoName = 'E-wallet';
   } else {
-    var infoName = 'E-wallet'
+    var infoName = 'bank';
   }
   if(!req.body.name) {
     return res.status(201).json({
@@ -120,7 +120,7 @@ const addBankAndEWallet = async(req, res) => {
         'wallet_name':req.body.name,
         'balance':req.body.amount
       }
-      const ewallet = new EWallet(data)
+      var ewallet = new EWallet(data)
       await ewallet.save()
     } else {
       const data = {
@@ -130,8 +130,14 @@ const addBankAndEWallet = async(req, res) => {
         'bank_name':req.body.name,
         'balance':req.body.amount
       }
-      const bank = new UserBank(data)
+      var bank = new UserBank(data)
       await bank.save()
+      var userBal = await UserBalance.findOne({email:req.body.email});
+      const ListBal = {
+        'balance': userBal.balance + req.body.amount,
+      }
+      userBal = extend(userBal, ListBal)
+      await userBal.save();
     }
     return res.status(200).json({
       message: 'Successfully add '+ infoName
