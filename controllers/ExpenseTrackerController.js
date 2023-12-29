@@ -191,9 +191,9 @@ const editBankAndEWallet = async(req, res) => {
       error: 'Jumlah '+ infoName +' harus terisi'
     })
   }if(infoName == 'bank') {
-    var validName = await UserBank.findOne({bank_name:req.body.name})
+    var validName = await UserBank.findOne({bank_name:req.body.name,email:req.body.email})
   } else {
-    var validName = await EWallet.findOne({wallet_name:req.body.name})
+    var validName = await EWallet.findOne({wallet_name:req.body.name,email:req.body.email})
   }
   if(validName) {
     return res.status(201).json({
