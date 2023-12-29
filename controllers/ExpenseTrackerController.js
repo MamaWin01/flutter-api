@@ -273,9 +273,11 @@ const editAccount = async(req, res) => {
     }
     const validEmail = await UserModel.findOne({email:req.body.new_email})
     if(validEmail) {
-      return res.status(201).json({
-        error: "Email sudah terpakai"
-      })
+      if(req.body.email != req.body.new_email) {
+        return res.status(201).json({
+          error: "Email sudah terpakai"
+        })
+      }
     }
     if(!user.authenticate(req.body.password)) {
       return res.status(500).json({
