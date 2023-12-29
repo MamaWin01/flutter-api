@@ -195,21 +195,21 @@ const editBankAndEWallet = async(req, res) => {
   } else {
     var validName = await EWallet.findOne({wallet_name:req.body.name,email:req.body.email})
   }
-  if(validName) {
-    if(infoName == 'E-wallet') {
-      if(validName.wallet_name != req.body.name) {
-        return res.status(201).json({
-          error: 'Nama '+ infoName +' sudah terdaftar'
-        })
-      }
-    } else {
-      if(validName.bank_name != req.body.name) {
-        return res.status(201).json({
-          error: 'Nama '+ infoName +' sudah terdaftar'
-        })
-      }
+
+  if(infoName == 'E-wallet') {
+    if(validName && validName.wallet_name != req.body.name) {
+      return res.status(201).json({
+        error: 'Nama '+ infoName +' sudah terdaftar'
+      })
+    }
+  } else {
+    if(validName && validName.bank_name != req.body.name) {
+      return res.status(201).json({
+        error: 'Nama '+ infoName +' sudah terdaftar'
+      })
     }
   }
+
   try {
     if(infoName == 'E-wallet') {
       const data = {
