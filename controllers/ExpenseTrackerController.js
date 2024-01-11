@@ -281,7 +281,7 @@ const editAccount = async(req, res) => {
     }
     if(!user.authenticate(req.body.password)) {
       return res.status(500).json({
-        error: "Paswword atau nama anda salah"
+        error: "Password atau nama anda salah"
       })
     }
     if(req.body.profile_image) {
@@ -310,7 +310,7 @@ const deleteAccount = async(req, res) => {
   console.log(user);
   if(!user.authenticate(req.body.password)) {
     return res.status(500).json({
-      error: "Paswword atau nama anda salah"
+      error: "Password atau nama anda salah"
     })
   }
   await UserBalance.find({user_id:user._id}).deleteMany();
